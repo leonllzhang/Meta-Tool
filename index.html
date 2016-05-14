@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" charset="utf-8" content="initial-scale=1, maximum-scale=1, column-scalable=no" />
+    <link rel="stylesheet" href="./node_modules/angular-material/angular-material.css">
+    <script src="./node_modules/angular/angular.js"></script>
+    <script src="./node_modules/angular-aria/angular-aria.js"></script>
+    <script src="./node_modules/angular-animate/angular-animate.js"></script>
+    <script src="./node_modules/angular-material/angular-material.js"></script>
+    <!-- <script src="./server.js"></script> -->
+</head>
+
+<body ng-app="YourApp">
+    <div ng-controller="YourController" layout="column" ng-cloak class="md-inline-form">
+        <p>名字 :
+            <input type="text" ng-model="name">
+        </p>
+        <h1>Hello {{name}}</h1>
+        <md-button class="add-tab md-primary md-raised" ng-click="addclick()"> Add column</md-button>
+        <md-content class="md-padding" style="height:500px;">
+            <md-tabs md-selected="selectedIndex" md-border-bottom md-autoselect style="height:98%;">
+                <md-tab ng-repeat="column in columnsarray" ng-disabled="column.disabled" label="{{column.name}}" >
+                    <div class="demo-tab column{{$index%4}}" style="padding: 25px; text-align: center;">
+                        <div>
+                            <!-- tab detail content -->
+                            <!-- column basic information -->
+                            <md-content md-theme="docs-dark" layout-gt-sx="row" layout-padding>
+                                <div>
+                                    <md-input-container>
+                                        <label>Column Name</label>
+                                        <input ng-model="column.name">
+                                    </md-input-container>
+                                    <md-input-container>
+                                        <label>Column size</label>
+                                        <input ng-model="column.size" required ng-pattern="/^[0-9]/">
+                                    </md-input-container>
+                                    <md-input-container>
+                                        <label>Column Description</label>
+                                        <input ng-model="column.description">
+                                    </md-input-container>
+                                    <md-input-container>
+                                        <label>Column indexable</label>
+                                        <md-select ng-model="column.indexable">
+                                            <md-option ng-repeat="item in indexable" value="{{item}}">
+                                                {{item}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                    <md-input-container>
+                                        <label>Column Type</label>
+                                        <md-select ng-model="column.type">
+                                            <md-option ng-repeat="type in types" value="{{type.columntype}}">
+                                                {{type.columntype}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                            </md-content>
+                            <!-- column 's property detail -->
+                            <md-content layout-padding>
+                                <div>
+                                    <form name="columnForm">
+                                        <div layout-gt-sm="row" ng-repeat="prop in column.propertys track by $index " ng-if="$index %4 == 0">
+                                            <md-input-container class="md-block" flex-gt-sm ng-repeat="i in [$index,$index+1,$index+2,$index+3]" ng-if="column.propertys[i] != null">
+                                                <label>{{column.propertys[i].key}}</label>
+                                                <input ng-model="column.propertys[i].value">
+                                            </md-input-container>
+                                        </div>
+                                    </form>
+                                </div>
+                            </md-content>
+                        </div>
+                        <br/>
+                        <md-button class="md-primary md-raised" ng-click="removeTab( tab )" ng-disabled="tabs.length <= 1">Remove column</md-button>
+                    </div>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+        <!--   <md-content md-theme="docs-dark" layout-gt-sx="row" layout-padding>
+    <div>
+      <md-input-container>
+        <label>Column Name</label>
+        <input ng-model="column.name">
+      </md-input-container>      
+      <md-input-container>
+        <label>Column size</label>
+        <input ng-model="column.size" required ng-pattern="/^[0-9]/">
+      </md-input-container>      
+      <md-input-container>
+        <label>Column Description</label>
+        <input ng-model="column.description" >
+      </md-input-container>
+      <md-input-container>
+        <label>Column indexable</label>
+        <md-select ng-model="column.indexable">
+              <md-option ng-repeat="item in indexable" value="{{item}}">
+                {{item}}
+              </md-option>
+            </md-select>        
+      </md-input-container>
+      <md-input-container>
+        <label>Column Type</label>
+         <md-select ng-model="column.type">
+              <md-option ng-repeat="type in types" value="{{type.columntype}}">
+                {{type.columntype}}
+              </md-option>
+            </md-select>
+      </md-input-container>
+     
+    </div>
+  </md-content>
+  <md-content layout-padding>
+    <div>
+    <form name="columnForm">
+    <div layout-gt-sm="row" ng-repeat="prop in column.propertys track by $index " ng-if="$index %4 == 0">
+          <md-input-container class="md-block" flex-gt-sm ng-repeat="i in [$index,$index+1,$index+2,$index+3]" ng-if="column.propertys[i] != null">
+            <label>{{column.propertys[i].key}}</label>
+            <input ng-model="column.propertys[i].value">
+          </md-input-container>          
+        </div>
+        <md-button class="add-tab md-primary md-raised" ng-click="addclick()"> Add column</md-button>
+        </form>
+    </div>
+  </md-content> -->
+      <md-button class="add-tab md-primary md-raised" ng-click="saveedit()"> Save edit</md-button>
+
+    </div>
+    <!-- <div ng-controller="AppCtrl" class="sample" layout="column" ng-cloak>
+  <md-content class="md-padding">
+    <md-tabs md-selected="selectedIndex" md-border-bottom md-autoselect>
+      <md-tab ng-repeat="tab in tabs"
+              ng-disabled="tab.disabled"
+              label="{{tab.title}}">
+        <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
+          <div ng-bind="tab.content"></div>
+          <br/>
+          <md-button class="md-primary md-raised" ng-click="removeTab( tab )" ng-disabled="tabs.length <= 1">Remove Tab</md-button>
+        </div>
+      </md-tab>
+    </md-tabs>
+  </md-content>
+  <form ng-submit="addTab(tTitle,tContent)" layout="column" class="md-padding" style="padding-top: 0;">
+    <div layout="row" layout-sm="column">
+      <div flex style="position: relative;">
+        <h2 class="md-subhead" style="position: absolute; bottom: 0; left: 0; margin: 0; font-weight: 500; text-transform: uppercase; line-height: 35px; white-space: nowrap;">Add a new Tab:</h2>
+      </div>
+      <md-input-container>
+        <label for="label">Label</label>
+        <input type="text" id="label" ng-model="tTitle">
+      </md-input-container>
+      <md-input-container>
+        <label for="content">Content</label>
+        <input type="text" id="content" ng-model="tContent">
+      </md-input-container>
+      <md-button class="add-tab md-primary md-raised" ng-disabled="!tTitle || !tContent" type="submit" style="margin-right: 0;">Add Tab</md-button>
+    </div>
+  </form>
+</div> -->
+</body>
+<script>
+angular.module('YourApp', ['ngMaterial']).controller("YourController", function($scope) {
+    $scope.column = {
+        name: 'RefNum',
+        type: 'string',
+        size: '32',
+        indexable: 'true',
+        description: 'wosssdfsdf',
+        propertys: [{
+            key: 'Label',
+            value: 'CO Ref Number'
+        }, {
+            key: 'Width',
+            value: '50px'
+        }, {
+            key: 'Order',
+            value: '0'
+        }, {
+            key: 'Visable',
+            value: 'true'
+        }, {
+            key: 'Sortable',
+            value: 'true'
+        }, {
+            key: 'SortName',
+            value: 'RefNum'
+        }, {
+            key: 'Searchable',
+            value: 'true'
+        }, {
+            key: 'ShortName',
+            value: 'ref'
+        }, {
+            key: 'DataSourceType',
+            value: ''
+        }, {
+            key: 'DataSource',
+            value: ''
+        }, {
+            key: 'DataSourceGroupBy',
+            value: ''
+        }, {
+            key: 'DataControlType',
+            value: '1'
+        }, {
+            key: 'Require',
+            value: 'false'
+        }, {
+            key: 'InvalidMsg',
+            value: ''
+        }, {
+            key: 'InputRegular',
+            value: ''
+        }, {
+            key: 'DataFormat',
+            value: ''
+        }, {
+            key: 'JoinKeyword',
+            value: ';'
+        }]
+    };
+    $scope.types = ('int;string;dateTime').split(';').map(function(type) {
+        return {
+            columntype: type
+        };
+    });
+    $scope.indexable = [true, false];
+
+    $scope.columnsarray = [{
+        name: 'RefNum',
+        type: 'string',
+        size: '32',
+        indexable: 'true',
+        description: 'wosssdfsdf',
+        propertys: [{
+            key: 'Label',
+            value: 'CO Ref Number'
+        }, {
+            key: 'Width',
+            value: '50px'
+        }, {
+            key: 'Order',
+            value: '0'
+        }, {
+            key: 'Visable',
+            value: 'true'
+        }, {
+            key: 'Sortable',
+            value: 'true'
+        }, {
+            key: 'SortName',
+            value: 'RefNum'
+        }, {
+            key: 'Searchable',
+            value: 'true'
+        }, {
+            key: 'ShortName',
+            value: 'ref'
+        }, {
+            key: 'DataSourceType',
+            value: ''
+        }, {
+            key: 'DataSource',
+            value: ''
+        }, {
+            key: 'DataSourceGroupBy',
+            value: ''
+        }, {
+            key: 'DataControlType',
+            value: '1'
+        }, {
+            key: 'Require',
+            value: 'false'
+        }, {
+            key: 'InvalidMsg',
+            value: ''
+        }, {
+            key: 'InputRegular',
+            value: ''
+        }, {
+            key: 'DataFormat',
+            value: ''
+        }, {
+            key: 'JoinKeyword',
+            value: ';'
+        }]
+    }, {
+        name: 'Requestdetails',
+        type: 'string',
+        size: '200',
+        indexable: 'true',
+        description: 'Requestdetails',
+        propertys: [{
+            key: 'Label',
+            value: 'Requestdetails'
+        }, {
+            key: 'Width',
+            value: '50px'
+        }, {
+            key: 'Order',
+            value: '0'
+        }, {
+            key: 'Visable',
+            value: 'true'
+        }, {
+            key: 'Sortable',
+            value: 'true'
+        }, {
+            key: 'SortName',
+            value: 'Requestdetails'
+        }, {
+            key: 'Searchable',
+            value: 'true'
+        }, {
+            key: 'ShortName',
+            value: 'Requestdetails'
+        }, {
+            key: 'DataSourceType',
+            value: ''
+        }, {
+            key: 'DataSource',
+            value: ''
+        }, {
+            key: 'DataSourceGroupBy',
+            value: ''
+        }, {
+            key: 'DataControlType',
+            value: '1'
+        }, {
+            key: 'Require',
+            value: 'false'
+        }, {
+            key: 'InvalidMsg',
+            value: ''
+        }, {
+            key: 'InputRegular',
+            value: ''
+        }, {
+            key: 'DataFormat',
+            value: ''
+        }, {
+            key: 'JoinKeyword',
+            value: ';'
+        }]
+    }, {
+        name: 'RequestNatureOfGift',
+        type: 'string',
+        size: '300',
+        indexable: 'true',
+        description: 'RequestNatureOfGift',
+        propertys: [{
+            key: 'Label',
+            value: 'RequestNatureOfGift'
+        }, {
+            key: 'Width',
+            value: '50px'
+        }, {
+            key: 'Order',
+            value: '0'
+        }, {
+            key: 'Visable',
+            value: 'true'
+        }, {
+            key: 'Sortable',
+            value: 'true'
+        }, {
+            key: 'SortName',
+            value: 'RequestNatureOfGift'
+        }, {
+            key: 'Searchable',
+            value: 'true'
+        }, {
+            key: 'ShortName',
+            value: 'ref'
+        }, {
+            key: 'DataSourceType',
+            value: ''
+        }, {
+            key: 'DataSource',
+            value: ''
+        }, {
+            key: 'DataSourceGroupBy',
+            value: ''
+        }, {
+            key: 'DataControlType',
+            value: '1'
+        }, {
+            key: 'Require',
+            value: 'false'
+        }, {
+            key: 'InvalidMsg',
+            value: ''
+        }, {
+            key: 'InputRegular',
+            value: ''
+        }, {
+            key: 'DataFormat',
+            value: ''
+        }, {
+            key: 'JoinKeyword',
+            value: ';'
+        }]
+    }, {
+        name: 'RealClientName',
+        type: 'string',
+        size: '50',
+        indexable: 'true',
+        description: 'Real Client Name',
+        propertys: [{
+            key: 'Label',
+            value: 'Nature of gift'
+        }, {
+            key: 'Width',
+            value: '50px'
+        }, {
+            key: 'Order',
+            value: '0'
+        }, {
+            key: 'Visable',
+            value: 'true'
+        }, {
+            key: 'Sortable',
+            value: 'true'
+        }, {
+            key: 'SortName',
+            value: 'RefNum'
+        }, {
+            key: 'Searchable',
+            value: 'true'
+        }, {
+            key: 'ShortName',
+            value: 'ref'
+        }, {
+            key: 'DataSourceType',
+            value: ''
+        }, {
+            key: 'DataSource',
+            value: ''
+        }, {
+            key: 'DataSourceGroupBy',
+            value: ''
+        }, {
+            key: 'DataControlType',
+            value: '1'
+        }, {
+            key: 'Require',
+            value: 'false'
+        }, {
+            key: 'InvalidMsg',
+            value: ''
+        }, {
+            key: 'InputRegular',
+            value: ''
+        }, {
+            key: 'DataFormat',
+            value: ''
+        }, {
+            key: 'JoinKeyword',
+            value: ';'
+        }]
+    }];
+    $scope.addclick = function() {
+        console.log(JSON.stringify($scope.column));
+        alert(1);
+        alert(JSON.stringify($scope.column));
+    };
+
+    $scope.saveedit = function(){
+        console.log($scope.columnsarray);
+        alert(JSON.stringify($scope.columnsarray));
+    };
+
+}).config(function($mdThemingProvider) {
+    $mdThemingProvider.theme('docs-dark', 'default')
+        .primaryPalette('yellow')
+        .dark();
+});
+</script>
+
+</html>
