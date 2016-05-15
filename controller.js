@@ -371,6 +371,15 @@ angular.module('YourApp', ['ngMaterial']).controller("YourController", function(
         alert(JSON.stringify($scope.columnsarray));
     };
 
+    $scope.loadfile = function(){
+        $http.get('localhost/readxml',{filepath: './/Metadata-Settings.config'}).success(function(){
+            alert('success');
+
+        }).error(function(){
+            alert('error');
+        });
+    };
+
 }).config(function($mdThemingProvider) {
     $mdThemingProvider.theme('docs-dark', 'default')
         .primaryPalette('yellow')

@@ -13,12 +13,22 @@
 
 <body ng-app="YourApp">
     <div ng-controller="YourController" layout="column" ng-cloak class="md-inline-form">
-        <p>名字 :
+        <p>
             <input type="text" ng-model="number">
         </p>
-        <h1>Hello {{name}}</h1>
+        <!-- The top toolbar -->
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Settings">
+          <md-icon md-svg-icon="./bower_components/material-design-icons/maps/svg/design/ic_local_airport_24px.svg"></md-icon>
+        </md-button>
+        <h2>
+          <span class="md-title">Get Lost!</span>
+        </h2>
+      </div>
+    </md-toolbar>
+        <md-button ng-click="loadfile()"> load file</md-buttom>
         <md-button class="add-tab md-primary md-raised" ng-click="addclick()"> Add column</md-button>
-        
         <md-button class="add-tab md-primary md-raised" ng-click="addclick()" > Add {{number}} column</md-button>
         <md-button class="add-tab md-primary md-raised" ng-click="saveedit()"> Save edit</md-button>
         <md-content class="md-padding" style="height:500px;">
