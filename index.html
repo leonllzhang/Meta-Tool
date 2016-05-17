@@ -31,7 +31,7 @@
         <md-button class="add-tab md-primary md-raised" ng-click="addclick()"> Add column</md-button>
         <md-button class="add-tab md-primary md-raised" ng-click="addclick()" > Add {{number}} column</md-button>
         <md-button class="add-tab md-primary md-raised" ng-click="saveedit()"> Save edit</md-button>
-        <md-content class="md-padding" style="height:500px;">
+        <md-content class="md-padding" style="">
             <md-tabs md-selected="selectedIndex" md-border-bottom md-autoselect md-dynamic-height>
                 <md-tab ng-repeat="column in columnsarray" ng-disabled="column.disabled" label="{{column.name}}" >
                     <div class="demo-tab column{{$index%4}}" style="padding: 25px; text-align: center;">
